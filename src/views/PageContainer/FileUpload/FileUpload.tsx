@@ -43,14 +43,14 @@ function FileUpload (props: any): React.ReactElement {
       formData.append("chunk", chunk);
       formData.append("hash", hash);
       formData.append("fileName", fileName);
-      // api.upload(formData).then(res => {
-      //   console.log(res);
-      // }).catch(err => {
-      //   console.log(err);
-      // });
+      api.upload(formData).then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err);
+      });
       return {formData};
     }).map(async ({ formData }) => {
-      console.log(formData)
+      console.log(formData);
       return formData;
     });
   }, [fileChunkList]);
