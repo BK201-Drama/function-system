@@ -9,7 +9,8 @@ const createFileChunkArray = (file: any, size: number = SIZE): Array<any> => {
   const fileChunkList: Array<any> = [];
   let index: number = 0;
   while (index < file.size) {
-    let chunk: any = file.slice(index, index + size)
+    // 记得添加类型
+    let chunk: any = file.slice(index, index + size, file.type);
     fileChunkList.push({file: chunk});
     index += size;
   }
@@ -24,6 +25,7 @@ function FileUpload (props: any): React.ReactElement {
 
   const getFile = async (e: any) => {
     const [file] = e.target.files;
+    console.log(file);
     await setFileName(file.name)
     const res = createFileChunkArray(file).map((item, index) => {
       return {
@@ -38,21 +40,22 @@ function FileUpload (props: any): React.ReactElement {
   useEffect(() => {
     // 创建表单数据，并发送请求
     let arr = fileChunkList.map(({chunk, hash}) => {
-
+      console.log('chunk', chunk.file);
       var formData = new FormData();
-      formData.append("chunk", chunk);
-      formData.append("hash", hash);
-      formData.append("fileName", fileName);
+      formData.append("file", chunk.file, `${fileName}-${hash}.zip`);
+      // formData.append("hash", hash);
+      // formData.append("fileName", `${fileName}-${hash}`);
       api.upload(formData).then(res => {
-        console.log(res);
+        console.log("RES", res);
       }).catch(err => {
         console.log(err);
       });
-      return {formData};
-    }).map(async ({ formData }) => {
-      console.log(formData);
-      return formData;
-    });
+      // return {formData};
+    })
+    // .map(async ({ formData }) => {
+    //   console.log(formData);
+    //   return formData;
+    // });
   }, [fileChunkList]);
 
   return (
