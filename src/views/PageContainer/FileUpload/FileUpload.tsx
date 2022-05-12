@@ -43,19 +43,16 @@ function FileUpload (props: any): React.ReactElement {
       console.log('chunk', chunk.file);
       var formData = new FormData();
       formData.append("file", chunk.file, `${fileName}-${hash}.zip`);
+      formData.append("number", `${fileChunkList.length}`);
       // formData.append("hash", hash);
-      // formData.append("fileName", `${fileName}-${hash}`);
+      formData.append("fileName", fileName);
       api.upload(formData).then(res => {
         console.log("RES", res);
       }).catch(err => {
         console.log(err);
       });
       // return {formData};
-    })
-    // .map(async ({ formData }) => {
-    //   console.log(formData);
-    //   return formData;
-    // });
+    });
   }, [fileChunkList]);
 
   return (
